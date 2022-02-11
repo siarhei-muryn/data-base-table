@@ -1,0 +1,9 @@
+{
+  "name": "data-table",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "cross-fetch": "^3.1.5",
+    "node-fetch": "^3.2.0"
+  }
+}
