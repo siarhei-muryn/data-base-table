@@ -3,16 +3,19 @@
 class DataTable {
 
     constructor(pasteId, src) {
+        this.data = undefined;
+        this.sortedData = undefined;
         this.pasteId = pasteId;
         this.src = src;
         this.loaderStart();
         this.getData(this.src);
+        this.sortChanger = true;
     }
 
     loaderStart() {
         let contentLoaderElement = document.createElement('div');
         contentLoaderElement.className = 'content-loader';
-        contentLoaderElement.innerText = 'Loading';
+        contentLoaderElement.innerText = 'Loading...';
         contentLoaderElement.style.width = '100%';
         contentLoaderElement.style.height = '100%';
         contentLoaderElement.style.fontSize = '4rem';
@@ -50,6 +53,7 @@ class DataTable {
             })
             .then(result => {
                 this.data = result;
+                this.sortedData = this.data;
                 this.createTable();
             }).catch(reason => console.log(reason));
     }
@@ -66,13 +70,40 @@ class DataTable {
         tableHead.className = this.pasteId + '-head';
 
         let headColumns = 0;
-        for (let key in this.data[0]) {
+        for (let key in this.sortedData[0]) {
             headColumns += 1;
+
             let headCell = document.createElement('th');
             headCell.className = this.pasteId + '-head-' + headColumns;
             headCell.style.border = '1px black solid';
             headCell.style.borderCollapse = 'collapse';
-            headCell.innerText = key.toUpperCase();
+
+            let tempDiv = document.createElement('div');
+            tempDiv.className = 'temp-div';
+            tempDiv.style.display = 'flex';
+            tempDiv.style.justifyContent = 'center';
+            tempDiv.style.alignItems = 'center';
+
+            let paragraph = document.createElement('p');
+            paragraph.innerText = key.toUpperCase();
+            tempDiv.appendChild(paragraph);
+
+            let svgSort = document.createElement('img');
+            svgSort.className = 'svg-sort';
+            svgSort.src = 'img/svg/1200px-Sort_font_awesome.svg.png';
+            svgSort.style.maxWidth = '10%';
+            svgSort.style.maxHeight = '10%';
+
+
+            svgSort.onclick = () => {
+                this.dataSorting(this.sortChanger, key);
+                this.sortChanger = !this.sortChanger;
+            }
+
+
+            tempDiv.appendChild(svgSort);
+
+            headCell.appendChild(tempDiv);
             tableHead.appendChild(headCell);
         }
         tableElement.appendChild(tableHead);
@@ -82,7 +113,7 @@ class DataTable {
 
 
         let bodyRows = 0;
-        for (let item of this.data) {
+        for (let item of this.sortedData) {
             bodyRows += 1;
             let tableRow = document.createElement('tr');
             tableRow.className = this.pasteId + '-body-' + 'row-' + bodyRows;
@@ -94,11 +125,23 @@ class DataTable {
                 tableColumn.className = this.pasteId + '-body-' + 'row-' + bodyRows + '-column-' + bodyColumns;
                 let blockWidth = Math.floor(window.innerWidth / headColumns) - 5;
                 tableColumn.style.maxWidth = blockWidth.toString() + 'px';
+                tableColumn.style.minWidth = (blockWidth - 50).toString() + 'px';
                 tableColumn.style.padding = '1rem';
                 tableColumn.style.border = '1px black solid';
                 tableColumn.style.borderCollapse = 'collapse';
-                tableColumn.innerText = item[key];
-                tableRow.appendChild(tableColumn);
+
+                if (typeof item[key] === 'object') {
+                    let keys = item[key];
+                    let str = '';
+                    for (let key in keys) {
+                        str += keys[key] + ', ';
+                    }
+                    tableColumn.innerText = str;
+                    tableRow.appendChild(tableColumn);
+                } else {
+                    tableColumn.innerText = item[key];
+                    tableRow.appendChild(tableColumn);
+                }
             }
             tableBody.appendChild(tableRow);
         }
@@ -106,11 +149,30 @@ class DataTable {
         pasteElement.appendChild(tableElement);
     }
 
+    dataSorting(order, key) {
 
+        let changer;
+        if (order) {
+            changer = 1;
+        } else changer = -1;
+
+        this.sortedData.sort((first, second) => {
+            if (first[key] < second[key]) {
+                return -1 * changer;
+            } else if (first[key] > second[key]) {
+                return 1 * changer;
+            } else return 0;
+        })
+        document.getElementById(this.pasteId).innerHTML = '';
+        this.createTable();
+    }
 }
 
-let table = new DataTable('table-1', 'http://www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D');
 
+let table = new DataTable('table-1', 'http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D');
+
+//http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D
+//http://www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D
 /*
 
 [
