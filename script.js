@@ -89,8 +89,6 @@ class DataTable {
             let headCell = document.createElement('th');
             {
                 headCell.className = this.pasteId + '-head-' + this.headColumns;
-                headCell.style.border = '1px black solid';
-                headCell.style.borderCollapse = 'collapse';
             }
 
             let tempDiv = document.createElement('div');
@@ -109,8 +107,8 @@ class DataTable {
             {
                 svgSort.className = 'svg-sort';
                 svgSort.src = 'img/svg/1200px-Sort_font_awesome.svg.png';
-                svgSort.style.maxWidth = '10%';
-                svgSort.style.maxHeight = '10%';
+                svgSort.style.maxWidth = '8%';
+                svgSort.style.maxHeight = '8%';
             }
             tempDiv.appendChild(svgSort);
 
@@ -123,8 +121,10 @@ class DataTable {
             let searchInput = document.createElement('input');
             {
                 searchInput.className = this.pasteId + '-head-' + key;
-                searchInput.style.maxWidth = '50%';
+                searchInput.style.maxWidth = '90%';
+                searchInput.style.margin= '5%';
                 searchInput.placeholder = 'search';
+                searchInput.type = 'text';
             }
 
             searchInput.onchange = () => {
@@ -161,9 +161,6 @@ class DataTable {
                     let blockWidth = Math.floor(window.innerWidth / this.headColumns) - 5;
                     tableColumn.style.maxWidth = blockWidth.toString() + 'px';
                     tableColumn.style.minWidth = (blockWidth - 50).toString() + 'px';
-                    tableColumn.style.padding = '1rem';
-                    tableColumn.style.border = '1px black solid';
-                    tableColumn.style.borderCollapse = 'collapse';
                 }
 
                 if (typeof item[key] === 'object') {
@@ -217,8 +214,8 @@ class DataTable {
     }
 }
 
-//let src = 'http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D';
-let src = 'http://www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D';
+let src = 'http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D';
+//let src = 'http://www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D';
 let table = new DataTable('table-1', src);
 
 /*
