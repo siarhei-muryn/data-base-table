@@ -122,13 +122,18 @@ class DataTable {
             {
                 searchInput.className = this.pasteId + '-head-' + key;
                 searchInput.style.maxWidth = '90%';
-                searchInput.style.margin= '5%';
+                searchInput.style.margin = '5%';
                 searchInput.placeholder = 'search';
                 searchInput.type = 'text';
             }
 
             searchInput.onchange = () => {
                 let searchStr = searchInput.value;
+                if (searchStr === '') {
+                    this.tableBody.innerHTML = '';
+                    this.createTableBody(this.sortedData);
+                    return;
+                }
                 this.dataSearching(searchStr, key);
             }
 
@@ -205,7 +210,7 @@ class DataTable {
     dataSearching(searchRequest, key) {
         this.searchedData = [];
         for (let item of this.data) {
-            if (item[key].toString().includes(searchRequest)) {
+            if (item[key].toString().toUpperCase().search(searchRequest.toUpperCase()) >= 0) {
                 this.searchedData.push(item);
             }
         }
@@ -218,21 +223,3 @@ let src = 'http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7B
 //let src = 'http://www.filltext.com/?rows=1000&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&delay=3&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D';
 let table = new DataTable('table-1', src);
 
-/*
-
-[
-    {
-        id: 101,
-        firstName: 'Sue',
-        lastName: 'Corson',
-        email: 'DWhalley@in.gov',
-        phone: '(612)211-6296',
-        address: {
-            streetAddress: '9792 Mattis Ct',
-            city: 'Waukesha',
-            state: 'WI',
-            zip: '22178'
-        },
-        description: 'et lacus magna dolor...',
-    }
-]*/
